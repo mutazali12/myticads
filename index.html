@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق NanoTech - مستقبل التكنولوجيا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            background: #0a0a2e;
+        }
+
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .header {
+            position: relative;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 3rem;
+            text-shadow: 0 0 15px #00f7ff;
+            animation: glow 2s infinite alternate;
+        }
+
+        .slogan {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: #a0f6ff;
+        }
+
+        .download-btns {
+            margin: 2rem 0;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(45deg, #00f7ff, #0066ff);
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #00f7ff;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            transition: transform 0.3s;
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(0, 247, 255, 0.1);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00f7ff;
+            }
+            to {
+                text-shadow: 0 0 20px #0066ff, 0 0 30px #00f7ff;
+            }
+        }
+
+        .atom-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #00f7ff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas-bg"></canvas>
+
+    <header class="header">
+        <h1 class="logo">NanoTech</h1>
+        <p class="slogan">تكنولوجيا المستقبل بين يديك</p>
+        <div class="download-btns">
+            <a href="#" class="btn"><i class="fab fa-android"></i> Google Play</a>
+            <a href="#" class="btn"><i class="fab fa-apple"></i> App Store</a>
+        </div>
+    </header>
+
+
+
+    <script>
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(0, 247, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            init();
+        });
+
+        resizeCanvas();
+        init();
+        animate();
+
+        // Add interactive effects
+        document.addEventListener('mousemove', (e) => {
+            particles.forEach(particle => {
+                const dx = e.clientX - particle.x;
+                const dy = e.clientY - particle.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 100) {
+                    particle.x += dx * 0.01;
+                    particle.y += dy * 0.01;
+                }
+            });
+        });
+    </script>
+</body>
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خلفية متحركة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 100%;
+            background-image: url('1.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7; /* التعديل هنا */
+            filter: brightness(0.8) contrast(1.2); /* التعديل هنا */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.3), rgba(255,255,255,0.1));
+            background: linear-gradient(45deg, 
+            rgba(0,0,0,0.2),  /* التعديل هنا */
+            rgba(255,255,255,0.05) /* التعديل هنا */
+            
+            
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        @keyframes zoomEffect {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .image-container {
+                background-position: 65% center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container"></div>
+        <div class="overlay"></div>
+        <canvas class="particles"></canvas>
+    </div>
+
+    <script>
+        // تأثير الجسيمات المتحركة
+        const canvas = document.querySelector('.particles');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+
+        // إعداد حجم الكانفاس
+        function setSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setSize();
+        window.addEventListener('resize', setSize);
+
+        // إنشاء الجسيمات
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255,255,255,${Math.random()})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // إنشاء مجموعة الجسيمات
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < 100; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // تحريك الجسيمات
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // تأثير الماوس التفاعلي
+        canvas.addEventListener('mousemove', (e) => {
+            for (let i = 0; i < 3; i++) {
+                particlesArray.push(new Particle({
+                    x: e.x,
+                    y: e.y,
+                    speedX: Math.random() * 4 - 2,
+                    speedY: Math.random() * 4 - 2
+                }));
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+<style>
+    /* تنسيقات البطاقة */
+    .management-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin: 10px;
+    }
+
+    a.management-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .management-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* تنسيقات الفوتر */
+    .custom-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        text-align: center;
+        background-color: #6e1276;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .footer-link {
+        text-decoration: none;
+        color: #6c757d;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .footer-link:hover {
+        color: #007bff;
+        transform: scale(1.05);
+    }
+
+    .footer-link:active {
+        transform: scale(0.95);
+    }
+
+    body {
+        padding-bottom: 70px; /* لمنع تداخل المحتوى مع الفوتر */
+    }
+</style>
+<footer class="custom-footer">
+    <a href="مسار_الصفحة_الهدف.html" class="footer-link">
+        bymutazali
+    </a>
+</footer>
+
+
+</html>
